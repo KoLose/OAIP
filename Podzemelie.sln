@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Podzemelie", "Podzemelie\Podzemelie.csproj", "{E91447DE-9274-4E08-8A68-F8A8D19EA38C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Methods", "Methods\Methods.csproj", "{32B04228-EF6E-41FB-851A-AB7AF1775424}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{E91447DE-9274-4E08-8A68-F8A8D19EA38C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E91447DE-9274-4E08-8A68-F8A8D19EA38C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E91447DE-9274-4E08-8A68-F8A8D19EA38C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32B04228-EF6E-41FB-851A-AB7AF1775424}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32B04228-EF6E-41FB-851A-AB7AF1775424}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32B04228-EF6E-41FB-851A-AB7AF1775424}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32B04228-EF6E-41FB-851A-AB7AF1775424}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
