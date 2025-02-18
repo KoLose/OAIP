@@ -1,14 +1,177 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq; // Для использования методов LINQ (например, Sum, Average, Max)
+using System.Linq;
 
-public static class FinanceManager // Класс объявлен как static
+public static class FinanceManager
 {
-    // Этап 7: Основная программа
+    // --- Этап 1: Структура хранения данных ---
+    private static Dictionary<string, List<double>> tranzakcii = new Dictionary<string, List<double>>(); // tranzakcii = "transactions"
+
+    // --- Этап 2: Добавление записей (вспомогательный метод для ввода данных) ---
+    private static void DobavitTranzakciyuIzVvoda() // DobavitTranzakciyuIzVvoda = "AddTransactionFromInput"
+    {
+        Console.Write("Введите категорию (Доход, Продукты, Транспорт, Развлечения): ");
+        string kategoriyaName = Console.ReadLine(); // kategoriyaName = "categoryName"
+        Console.Write("Введите сумму: ");
+        if (double.TryParse(Console.ReadLine(), out double tranzakciyaSumma)) // tranzakciyaSumma = "transactionSum"
+        {
+            DobavitTranzakciyu(kategoriyaName, tranzakciyaSumma);
+        }
+        else
+        {
+            Console.WriteLine("Некорректный ввод суммы.");
+        }
+    }
+
+    public static void DobavitTranzakciyu(string kategoriyaName, double tranzakciyaSumma) // DobavitTranzakciyu = "AddTransaction"
+    {
+        if (!tranzakcii.ContainsKey(kategoriyaName))
+        {
+            tranzakcii.Add(kategoriyaName, new List<double>());
+        }
+        tranzakcii[kategoriyaName].Add(tranzakciyaSumma);
+        Console.WriteLine("Запись добавлена.");
+    }
+
+    // --- Этап 3: Вывод информации ---
+    public static void VivestiFinansoviyOtchet() // VivestiFinansoviyOtchet = "PrintFinanceReport"
+    {
+        Console.WriteLine("Финансовый отчет:");
+        foreach (var kategoriya in tranzakcii)
+        {
+            double obschayaSumma = kategoriya.Value.Sum(); // obschayaSumma = "totalSum"
+            double okruglyonniyItog = Math.Round(obschayaSumma, 2, MidpointRounding.AwayFromZero); // okruglyonniyItog = "roundedTotal"
+            Console.WriteLine(kategoriya.Key + ": " + okruglyonniyItog.ToString() + " руб. - " + kategoriya.Value.Count + " операций");
+        }
+    }
+
+    // --- Этап 4: Расчет баланса (вспомогательный метод для отображения баланса) ---
+    private static void RasschitatIPokazatBalans() // RasschitatIPokazatBalans = "CalculateAndDisplayBalance"
+    {
+        double obschiyBalans = RasschitatBalans(); // obschiyBalans = "totalBalance"
+        double okruglyonniyBalans = Math.Round(obschiyBalans, 2, MidpointRounding.AwayFromZero); // okruglyonniyBalans = "roundedBalance"
+        Console.WriteLine("Текущий баланс: " + okruglyonniyBalans.ToString() + " руб.");
+    }
+
+    public static double RasschitatBalans() // RasschitatBalans = "CalculateBalance"
+    {
+        double doxod = 0; // doxod = "income"
+        double rashodi = 0; // rashodi = "expenses"
+
+        foreach (var kategoriya in tranzakcii)
+        {
+            if (kategoriya.Key.ToLower() == "доход")
+            {
+                doxod = kategoriya.Value.Sum();
+            }
+            else
+            {
+                rashodi += kategoriya.Value.Sum();
+            }
+        }
+
+        return doxod - rashodi;
+    }
+
+    // --- Этап 5: Анализ и прогнозирование (вспомогательный метод для отображения прогноза) ---
+    private static void SprognozirovatIPokazatRashodiNaSleduyuschiyMesyac() // SprognozirovatIPokazatRashodiNaSleduyuschiyMesyac = "PredictAndDisplayNextMonthExpenses"
+    {
+        double prognoziruemoeZnachenie = SprognozirovatRashodiNaSleduyuschiyMesyac(); // prognoziruemoeZnachenie = "predictedValue"
+        double okruglyonniyPrognoz = Math.Round(prognoziruemoeZnachenie, 2, MidpointRounding.AwayFromZero); // okruglyonniyPrognoz = "roundedPrediction"
+        Console.WriteLine("Прогнозируемые расходы на следующий месяц: " + okruglyonniyPrognoz.ToString() + " руб.");
+    }
+
+    public static double PoluchitSrednieRashodi(string kategoriyaName) // PoluchitSrednieRashodi = "GetAverageExpense"
+    {
+        if (tranzakcii.ContainsKey(kategoriyaName) && tranzakcii[kategoriyaName].Count > 0)
+        {
+            return tranzakcii[kategoriyaName].Average();
+        }
+        return 0;
+    }
+
+    public static double SprognozirovatRashodiNaSleduyuschiyMesyac() // SprognozirovatRashodiNaSleduyuschiyMesyac = "PredictNextMonthExpenses"
+    {
+        double obschiePrognoziruemieRashodi = 0; // obschiePrognoziruemieRashodi = "totalPredictedExpenses"
+
+        foreach (var kategoriya in tranzakcii.Keys)
+        {
+            if (kategoriya.ToLower() != "доход")
+            {
+                obschiePrognoziruemieRashodi += PoluchitSrednieRashodi(kategoriya) * 30;
+            }
+        }
+
+        return obschiePrognoziruemieRashodi;
+    }
+
+    // --- Этап 6: Статистика ---
+    public static void VivestiStatistiku() // VivestiStatistiku = "PrintStatistics"
+    {
+        double summaVsehRashodov = 0; // summaVsehRashodov = "allExpensesSum"
+        Dictionary<string, double> rashodiPoKategoriyam = new Dictionary<string, double>(); // rashodiPoKategoriyam = "categoryExpenses"
+        Dictionary<string, int> chastotaKategoriy = new Dictionary<string, int>(); // chastotaKategoriy = "categoryFrequency"
+
+        // Вычисляем общую сумму расходов, расходы по категориям и частоту категорий
+        foreach (var kategoriya in tranzakcii)
+        {
+            if (kategoriya.Key.ToLower() != "доход")
+            {
+                double itogPoKategorii = kategoriya.Value.Sum(); // itogPoKategorii = "categoryTotal"
+                summaVsehRashodov += itogPoKategorii;
+                rashodiPoKategoriyam[kategoriya.Key] = itogPoKategorii;
+                chastotaKategoriy[kategoriya.Key] = kategoriya.Value.Count;
+            }
+        }
+
+        // Выводим общую сумму расходов
+        double okruglyonnayaSummaRashodov = Math.Round(summaVsehRashodov, 2, MidpointRounding.AwayFromZero); // okruglyonnayaSummaRashodov = "roundedExpensesSum"
+        Console.WriteLine("Общая сумма расходов: " + okruglyonnayaSummaRashodov.ToString() + " руб.");
+
+        // Определяем самую затратную категорию
+        if (rashodiPoKategoriyam.Count > 0)
+        {
+            string samayaZtratnayaKategoriya = rashodiPoKategoriyam.OrderByDescending(x => x.Value).First().Key; // samayaZtratnayaKategoriya = "mostExpensiveCategory"
+            double okruglyonnayaSummaDlyaSamoyZtratnoy = Math.Round(rashodiPoKategoriyam[samayaZtratnayaKategoriya], 2, MidpointRounding.AwayFromZero); // okruglyonnayaSummaDlyaSamoyZtratnoy = "roundedSumForMostExpensive"
+            Console.WriteLine("Самая затратная категория: " + samayaZtratnayaKategoriya + " (" + okruglyonnayaSummaDlyaSamoyZtratnoy.ToString() + " руб.)");
+        }
+        else
+        {
+            Console.WriteLine("Нет данных о расходах.");
+        }
+
+        // Определяем самую частую категорию
+        if (chastotaKategoriy.Count > 0)
+        {
+            string samayaChastayaKategoriya = chastotaKategoriy.OrderByDescending(x => x.Value).First().Key; // samayaChastayaKategoriya = "mostFrequentCategory"
+            Console.WriteLine("Самая частая категория: " + samayaChastayaKategoriya + " (" + chastotaKategoriy[samayaChastayaKategoriya] + " операций)");
+        }
+        else
+        {
+            Console.WriteLine("Нет данных о частоте расходов.");
+        }
+
+        // Расчёт процентного соотношения расходов
+        Console.WriteLine("Процентное распределение расходов:");
+        if (summaVsehRashodov > 0)
+        {
+            foreach (var kategoriya in rashodiPoKategoriyam)
+            {
+                double procentZnachenie = (kategoriya.Value / summaVsehRashodov) * 100; // procentZnachenie = "percentageValue"
+                double okruglyonniyProcent = Math.Round(procentZnachenie, 2, MidpointRounding.AwayFromZero); // okruglyonniyProcent = "roundedPercentage"
+                double okruglyonnayaSummaKategorii = Math.Round(kategoriya.Value, 2, MidpointRounding.AwayFromZero); // okruglyonnayaSummaKategorii = "roundedCategorySum"
+                Console.WriteLine(kategoriya.Key + ": " + okruglyonnayaSummaKategorii.ToString() + " руб. (" + okruglyonniyProcent.ToString() + "%)");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Нет данных для расчета процентного распределения.");
+        }
+    }
+
+    // --- Этап 7: Основная программа (Main) ---
     public static void Main(string[] args)
     {
-        // FinanceManager manager = new FinanceManager();  - Убрали создание экземпляра
-
         while (true)
         {
             Console.WriteLine("\nДобро пожаловать в систему управления финансами!");
@@ -20,182 +183,32 @@ public static class FinanceManager // Класс объявлен как static
             Console.WriteLine("6. Выход");
 
             Console.Write("Выберите действие: ");
-            string choice = Console.ReadLine();
+            string viborPolzovatelya = Console.ReadLine(); // viborPolzovatelya = "userChoice"
 
-            switch (choice)
+            switch (viborPolzovatelya)
             {
                 case "1":
-                    Console.Write("Введите категорию (Доход, Продукты, Транспорт, Развлечения): ");
-                    string category = Console.ReadLine();
-                    Console.Write("Введите сумму: ");
-                    if (double.TryParse(Console.ReadLine(), out double amount))
-                    {
-                        AddTransaction(category, amount); // Вызываем статический метод напрямую через имя класса
-                    }
-                    else
-                    {
-                        Console.WriteLine("Некорректный ввод суммы.");
-                    }
+                    DobavitTranzakciyuIzVvoda();
                     break;
                 case "2":
-                    PrintFinanceReport(); // Вызываем статический метод напрямую через имя класса
+                    VivestiFinansoviyOtchet();
                     break;
                 case "3":
-                    double balance = CalculateBalance(); // Вызываем статический метод напрямую через имя класса
-                    double roundedBalance = Math.Round(balance, 2, MidpointRounding.AwayFromZero);
-                    Console.WriteLine("Текущий баланс: " + roundedBalance.ToString() + " руб.");
+                    RasschitatIPokazatBalans();
                     break;
                 case "4":
-                    double prediction = PredictNextMonthExpenses(); // Вызываем статический метод напрямую через имя класса
-                    double roundedPrediction = Math.Round(prediction, 2, MidpointRounding.AwayFromZero);
-                    Console.WriteLine("Прогнозируемые расходы на следующий месяц: " + roundedPrediction.ToString() + " руб.");
+                    SprognozirovatIPokazatRashodiNaSleduyuschiyMesyac();
                     break;
                 case "5":
-                    PrintStatistics(); // Вызываем статический метод напрямую через имя класса
+                    VivestiStatistiku();
                     break;
                 case "6":
                     Console.WriteLine("Выход из программы.");
-                    return; // Выход из цикла и завершение программы
+                    return;
                 default:
                     Console.WriteLine("Неверный выбор. Пожалуйста, выберите действие от 1 до 6.");
                     break;
             }
-        }
-    }
-
-    // Этап 1: Структура хранения данных
-    private static Dictionary<string, List<double>> transactions = new Dictionary<string, List<double>>(); // Сделали static
-
-    // Этап 2: Добавление записей
-    public static void AddTransaction(string category, double amount) // Сделали static
-    {
-        if (!transactions.ContainsKey(category))
-        {
-            transactions.Add(category, new List<double>());
-        }
-        transactions[category].Add(amount);
-        Console.WriteLine("Запись добавлена.");
-    }
-
-    // Этап 3: Вывод информации
-    public static void PrintFinanceReport() // Сделали static
-    {
-        Console.WriteLine("Финансовый отчет:");
-        foreach (var category in transactions)
-        {
-            double total = category.Value.Sum();
-            double roundedTotal = Math.Round(total, 2, MidpointRounding.AwayFromZero);
-            Console.WriteLine(category.Key + ": " + roundedTotal.ToString() + " руб. - " + category.Value.Count + " операций");
-        }
-    }
-
-    // Этап 4: Расчет баланса
-    public static double CalculateBalance() // Сделали static
-    {
-        double income = 0;
-        double expenses = 0;
-
-        foreach (var category in transactions)
-        {
-            if (category.Key.ToLower() == "доход")  //  Считаем "Доход" как положительное значение (доход)
-            {
-                income = category.Value.Sum();
-            }
-            else // Остальные категории - расходы
-            {
-                expenses += category.Value.Sum();
-            }
-        }
-
-        return income - expenses;
-    }
-
-    // Этап 5: Анализ и прогнозирование
-    public static double GetAverageExpense(string category) // Сделали static
-    {
-        if (transactions.ContainsKey(category) && transactions[category].Count > 0)
-        {
-            return transactions[category].Average();
-        }
-        return 0; // Если категория не найдена или нет транзакций
-    }
-
-    public static double PredictNextMonthExpenses() // Сделали static
-    {
-        double predictedExpenses = 0;
-
-        foreach (var category in transactions.Keys)
-        {
-            if (category.ToLower() != "доход") // Не учитываем "Доход" при прогнозировании расходов
-            {
-                predictedExpenses += GetAverageExpense(category) * 30; // Предполагаем, что в среднем в месяце 30 дней
-            }
-        }
-
-        return predictedExpenses;
-    }
-
-    // Этап 6: Статистика
-    public static void PrintStatistics() // Сделали static
-    {
-        double totalExpenses = 0;
-        Dictionary<string, double> categoryExpenses = new Dictionary<string, double>();
-        Dictionary<string, int> categoryFrequencies = new Dictionary<string, int>();
-
-        // Вычисляем общую сумму расходов, расходы по категориям и частоту категорий
-        foreach (var category in transactions)
-        {
-            if (category.Key.ToLower() != "доход") // Игнорируем "Доход"
-            {
-                double categoryTotal = category.Value.Sum();
-                totalExpenses += categoryTotal;
-                categoryExpenses[category.Key] = categoryTotal;
-                categoryFrequencies[category.Key] = category.Value.Count;
-            }
-        }
-
-        // Выводим общую сумму расходов
-        double roundedTotalExpenses = Math.Round(totalExpenses, 2, MidpointRounding.AwayFromZero);
-        Console.WriteLine("Общая сумма расходов: " + roundedTotalExpenses.ToString() + " руб.");
-
-        // Определяем самую затратную категорию
-        if (categoryExpenses.Count > 0)
-        {
-            string mostExpensiveCategory = categoryExpenses.OrderByDescending(x => x.Value).First().Key;
-            double roundedMostExpensive = Math.Round(categoryExpenses[mostExpensiveCategory], 2, MidpointRounding.AwayFromZero);
-            Console.WriteLine("Самая затратная категория: " + mostExpensiveCategory + " (" + roundedMostExpensive.ToString() + " руб.)");
-        }
-        else
-        {
-            Console.WriteLine("Нет данных о расходах.");
-        }
-
-        // Определяем самую частую категорию
-        if (categoryFrequencies.Count > 0)
-        {
-            string mostFrequentCategory = categoryFrequencies.OrderByDescending(x => x.Value).First().Key;
-            Console.WriteLine("Самая частая категория: " + mostFrequentCategory + " (" + categoryFrequencies[mostFrequentCategory] + " операций)");
-        }
-        else
-        {
-            Console.WriteLine("Нет данных о частоте расходов.");
-        }
-
-        // Расчёт процентного соотношения расходов
-        Console.WriteLine("Процентное распределение расходов:");
-        if (totalExpenses > 0)
-        {
-            foreach (var category in categoryExpenses)
-            {
-                double percentage = (category.Value / totalExpenses) * 100;
-                double roundedPercentage = Math.Round(percentage, 2, MidpointRounding.AwayFromZero);
-                double roundedCategoryValue = Math.Round(category.Value, 2, MidpointRounding.AwayFromZero);
-                Console.WriteLine(category.Key + ": " + roundedCategoryValue.ToString() + " руб. (" + roundedPercentage.ToString() + "%)");
-            }
-        }
-        else
-        {
-            Console.WriteLine("Нет данных для расчета процентного распределения.");
         }
     }
 }
