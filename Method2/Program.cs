@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public static class FinanceManager
+public static class Method2
 {
     // --- Этап 1: Структура хранения данных ---
-    private static Dictionary<string, List<double>> tranzakcii = new Dictionary<string, List<double>>(); // tranzakcii = "transactions"
+    private static Dictionary<string, List<double>> tranzakcii = new Dictionary<string, List<double>>(); // tranzakcii = "transactions" (список транзакций)
 
     // --- Этап 2: Добавление записей (вспомогательный метод для ввода данных) ---
-    private static void DobavitTranzakciyuIzVvoda() // DobavitTranzakciyuIzVvoda = "AddTransactionFromInput"
+    private static void DobavitTranzakciyuIzVvoda() // DobavitTranzakciyuIzVvoda = "AddTransactionFromInput" (добавить транзакцию из ввода)
     {
         Console.Write("Введите категорию (Доход, Продукты, Транспорт, Развлечения): ");
-        string kategoriyaName = Console.ReadLine(); // kategoriyaName = "categoryName"
+        string kategoriyaName = Console.ReadLine(); // kategoriyaName = "categoryName" (имя категории)
         Console.Write("Введите сумму: ");
-        if (double.TryParse(Console.ReadLine(), out double tranzakciyaSumma)) // tranzakciyaSumma = "transactionSum"
+        if (double.TryParse(Console.ReadLine(), out double tranzakciyaSumma)) // tranzakciyaSumma = "transactionSum" (сумма транзакции)
         {
             DobavitTranzakciyu(kategoriyaName, tranzakciyaSumma);
         }
@@ -23,7 +23,7 @@ public static class FinanceManager
         }
     }
 
-    public static void DobavitTranzakciyu(string kategoriyaName, double tranzakciyaSumma) // DobavitTranzakciyu = "AddTransaction"
+    public static void DobavitTranzakciyu(string kategoriyaName, double tranzakciyaSumma) // DobavitTranzakciyu = "AddTransaction" (добавить транзакцию)
     {
         if (!tranzakcii.ContainsKey(kategoriyaName))
         {
@@ -34,29 +34,29 @@ public static class FinanceManager
     }
 
     // --- Этап 3: Вывод информации ---
-    public static void VivestiFinansoviyOtchet() // VivestiFinansoviyOtchet = "PrintFinanceReport"
+    public static void VivestiFinansoviyOtchet() // VivestiFinansoviyOtchet = "PrintFinanceReport" (вывести финансовый отчет)
     {
         Console.WriteLine("Финансовый отчет:");
         foreach (var kategoriya in tranzakcii)
         {
-            double obschayaSumma = kategoriya.Value.Sum(); // obschayaSumma = "totalSum"
-            double okruglyonniyItog = Math.Round(obschayaSumma, 2, MidpointRounding.AwayFromZero); // okruglyonniyItog = "roundedTotal"
+            double obschayaSumma = kategoriya.Value.Sum(); // obschayaSumma = "totalSum" (общая сумма)
+            double okruglyonniyItog = Math.Round(obschayaSumma, 2, MidpointRounding.AwayFromZero); // okruglyonniyItog = "roundedTotal" (округленный итог)
             Console.WriteLine(kategoriya.Key + ": " + okruglyonniyItog.ToString() + " руб. - " + kategoriya.Value.Count + " операций");
         }
     }
 
     // --- Этап 4: Расчет баланса (вспомогательный метод для отображения баланса) ---
-    private static void RasschitatIPokazatBalans() // RasschitatIPokazatBalans = "CalculateAndDisplayBalance"
+    private static void RasschitatIPokazatBalans() // RasschitatIPokazatBalans = "CalculateAndDisplayBalance" (рассчитать и показать баланс)
     {
-        double obschiyBalans = RasschitatBalans(); // obschiyBalans = "totalBalance"
-        double okruglyonniyBalans = Math.Round(obschiyBalans, 2, MidpointRounding.AwayFromZero); // okruglyonniyBalans = "roundedBalance"
+        double obschiyBalans = RasschitatBalans(); // obschiyBalans = "totalBalance" (общий баланс)
+        double okruglyonniyBalans = Math.Round(obschiyBalans, 2, MidpointRounding.AwayFromZero); // okruglyonniyBalans = "roundedBalance" (округленный баланс)
         Console.WriteLine("Текущий баланс: " + okruglyonniyBalans.ToString() + " руб.");
     }
 
-    public static double RasschitatBalans() // RasschitatBalans = "CalculateBalance"
+    public static double RasschitatBalans() // RasschitatBalans = "CalculateBalance" (рассчитать баланс)
     {
-        double doxod = 0; // doxod = "income"
-        double rashodi = 0; // rashodi = "expenses"
+        double doxod = 0; // doxod = "income" (доход)
+        double rashodi = 0; // rashodi = "expenses" (расходы)
 
         foreach (var kategoriya in tranzakcii)
         {
@@ -74,14 +74,14 @@ public static class FinanceManager
     }
 
     // --- Этап 5: Анализ и прогнозирование (вспомогательный метод для отображения прогноза) ---
-    private static void SprognozirovatIPokazatRashodiNaSleduyuschiyMesyac() // SprognozirovatIPokazatRashodiNaSleduyuschiyMesyac = "PredictAndDisplayNextMonthExpenses"
+    private static void SprognozirovatIPokazatRashodiNaSleduyuschiyMesyac() // SprognozirovatIPokazatRashodiNaSleduyuschiyMesyac = "PredictAndDisplayNextMonthExpenses" (спрогнозировать и показать расходы на след. месяц)
     {
-        double prognoziruemoeZnachenie = SprognozirovatRashodiNaSleduyuschiyMesyac(); // prognoziruemoeZnachenie = "predictedValue"
-        double okruglyonniyPrognoz = Math.Round(prognoziruemoeZnachenie, 2, MidpointRounding.AwayFromZero); // okruglyonniyPrognoz = "roundedPrediction"
+        double prognoziruemoeZnachenie = SprognozirovatRashodiNaSleduyuschiyMesyac(); // prognoziruemoeZnachenie = "predictedValue" (прогнозируемое значение)
+        double okruglyonniyPrognoz = Math.Round(prognoziruemoeZnachenie, 2, MidpointRounding.AwayFromZero); // okruglyonniyPrognoz = "roundedPrediction" (округленный прогноз)
         Console.WriteLine("Прогнозируемые расходы на следующий месяц: " + okruglyonniyPrognoz.ToString() + " руб.");
     }
 
-    public static double PoluchitSrednieRashodi(string kategoriyaName) // PoluchitSrednieRashodi = "GetAverageExpense"
+    public static double PoluchitSrednieRashodi(string kategoriyaName) // PoluchitSrednieRashodi = "GetAverageExpense" (получить средние расходы)
     {
         if (tranzakcii.ContainsKey(kategoriyaName) && tranzakcii[kategoriyaName].Count > 0)
         {
@@ -90,9 +90,9 @@ public static class FinanceManager
         return 0;
     }
 
-    public static double SprognozirovatRashodiNaSleduyuschiyMesyac() // SprognozirovatRashodiNaSleduyuschiyMesyac = "PredictNextMonthExpenses"
+    public static double SprognozirovatRashodiNaSleduyuschiyMesyac() // SprognozirovatRashodiNaSleduyuschiyMesyac = "PredictNextMonthExpenses" (спрогнозировать расходы на след. месяц)
     {
-        double obschiePrognoziruemieRashodi = 0; // obschiePrognoziruemieRashodi = "totalPredictedExpenses"
+        double obschiePrognoziruemieRashodi = 0; // obschiePrognoziruemieRashodi = "totalPredictedExpenses" (общие прогнозируемые расходы)
 
         foreach (var kategoriya in tranzakcii.Keys)
         {
@@ -106,18 +106,18 @@ public static class FinanceManager
     }
 
     // --- Этап 6: Статистика ---
-    public static void VivestiStatistiku() // VivestiStatistiku = "PrintStatistics"
+    public static void VivestiStatistiku() // VivestiStatistiku = "PrintStatistics" (вывести статистику)
     {
-        double summaVsehRashodov = 0; // summaVsehRashodov = "allExpensesSum"
-        Dictionary<string, double> rashodiPoKategoriyam = new Dictionary<string, double>(); // rashodiPoKategoriyam = "categoryExpenses"
-        Dictionary<string, int> chastotaKategoriy = new Dictionary<string, int>(); // chastotaKategoriy = "categoryFrequency"
+        double summaVsehRashodov = 0; // summaVsehRashodov = "allExpensesSum" (сумма всех расходов)
+        Dictionary<string, double> rashodiPoKategoriyam = new Dictionary<string, double>(); // rashodiPoKategoriyam = "categoryExpenses" (расходы по категориям)
+        Dictionary<string, int> chastotaKategoriy = new Dictionary<string, int>(); // chastotaKategoriy = "categoryFrequency" (частота категорий)
 
         // Вычисляем общую сумму расходов, расходы по категориям и частоту категорий
         foreach (var kategoriya in tranzakcii)
         {
             if (kategoriya.Key.ToLower() != "доход")
             {
-                double itogPoKategorii = kategoriya.Value.Sum(); // itogPoKategorii = "categoryTotal"
+                double itogPoKategorii = kategoriya.Value.Sum(); // itogPoKategorii = "categoryTotal" (итог по категории)
                 summaVsehRashodov += itogPoKategorii;
                 rashodiPoKategoriyam[kategoriya.Key] = itogPoKategorii;
                 chastotaKategoriy[kategoriya.Key] = kategoriya.Value.Count;
@@ -125,14 +125,14 @@ public static class FinanceManager
         }
 
         // Выводим общую сумму расходов
-        double okruglyonnayaSummaRashodov = Math.Round(summaVsehRashodov, 2, MidpointRounding.AwayFromZero); // okruglyonnayaSummaRashodov = "roundedExpensesSum"
+        double okruglyonnayaSummaRashodov = Math.Round(summaVsehRashodov, 2, MidpointRounding.AwayFromZero); // okruglyonnayaSummaRashodov = "roundedExpensesSum" (округленная сумма расходов)
         Console.WriteLine("Общая сумма расходов: " + okruglyonnayaSummaRashodov.ToString() + " руб.");
 
         // Определяем самую затратную категорию
         if (rashodiPoKategoriyam.Count > 0)
         {
-            string samayaZtratnayaKategoriya = rashodiPoKategoriyam.OrderByDescending(x => x.Value).First().Key; // samayaZtratnayaKategoriya = "mostExpensiveCategory"
-            double okruglyonnayaSummaDlyaSamoyZtratnoy = Math.Round(rashodiPoKategoriyam[samayaZtratnayaKategoriya], 2, MidpointRounding.AwayFromZero); // okruglyonnayaSummaDlyaSamoyZtratnoy = "roundedSumForMostExpensive"
+            string samayaZtratnayaKategoriya = rashodiPoKategoriyam.OrderByDescending(x => x.Value).First().Key; // samayaZtratnayaKategoriya = "mostExpensiveCategory" (самая затратная категория)
+            double okruglyonnayaSummaDlyaSamoyZtratnoy = Math.Round(rashodiPoKategoriyam[samayaZtratnayaKategoriya], 2, MidpointRounding.AwayFromZero); // okruglyonnayaSummaDlyaSamoyZtratnoy = "roundedSumForMostExpensive" (округленная сумма для самой затратной)
             Console.WriteLine("Самая затратная категория: " + samayaZtratnayaKategoriya + " (" + okruglyonnayaSummaDlyaSamoyZtratnoy.ToString() + " руб.)");
         }
         else
@@ -143,7 +143,7 @@ public static class FinanceManager
         // Определяем самую частую категорию
         if (chastotaKategoriy.Count > 0)
         {
-            string samayaChastayaKategoriya = chastotaKategoriy.OrderByDescending(x => x.Value).First().Key; // samayaChastayaKategoriya = "mostFrequentCategory"
+            string samayaChastayaKategoriya = chastotaKategoriy.OrderByDescending(x => x.Value).First().Key; // samayaChastayaKategoriya = "mostFrequentCategory" (самая частая категория)
             Console.WriteLine("Самая частая категория: " + samayaChastayaKategoriya + " (" + chastotaKategoriy[samayaChastayaKategoriya] + " операций)");
         }
         else
@@ -157,9 +157,9 @@ public static class FinanceManager
         {
             foreach (var kategoriya in rashodiPoKategoriyam)
             {
-                double procentZnachenie = (kategoriya.Value / summaVsehRashodov) * 100; // procentZnachenie = "percentageValue"
-                double okruglyonniyProcent = Math.Round(procentZnachenie, 2, MidpointRounding.AwayFromZero); // okruglyonniyProcent = "roundedPercentage"
-                double okruglyonnayaSummaKategorii = Math.Round(kategoriya.Value, 2, MidpointRounding.AwayFromZero); // okruglyonnayaSummaKategorii = "roundedCategorySum"
+                double procentZnachenie = (kategoriya.Value / summaVsehRashodov) * 100; // procentZnachenie = "percentageValue" (процентное значение)
+                double okruglyonniyProcent = Math.Round(procentZnachenie, 2, MidpointRounding.AwayFromZero); // okruglyonniyProcent = "roundedPercentage" (округленный процент)
+                double okruglyonnayaSummaKategorii = Math.Round(kategoriya.Value, 2, MidpointRounding.AwayFromZero); // okruglyonnayaSummaKategorii = "roundedCategorySum" (округленная сумма категории)
                 Console.WriteLine(kategoriya.Key + ": " + okruglyonnayaSummaKategorii.ToString() + " руб. (" + okruglyonniyProcent.ToString() + "%)");
             }
         }
@@ -183,9 +183,9 @@ public static class FinanceManager
             Console.WriteLine("6. Выход");
 
             Console.Write("Выберите действие: ");
-            string viborPolzovatelya = Console.ReadLine(); // viborPolzovatelya = "userChoice"
+            string viborPolzovatelya = Console.ReadLine(); // viborPolzovatelya = "userChoice" (выбор пользователя)
 
-            switch (viborPolzovatelya)
+            switch (viborPolzovatelya) // viborPolzovatelya = "userChoice" (выбор пользователя)
             {
                 case "1":
                     DobavitTranzakciyuIzVvoda();
