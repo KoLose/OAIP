@@ -3,49 +3,45 @@ using System.Linq;
 
 public class Methods
 {
+
     // --- Этап 1: Calcul (2 числа) ---
-    public static (double plus, double minus, double product, string chastnoeMessage) Calcul(double a, double b)
+    public static double[] Calcul(double a, double b)
     {
         double plus = a + b;
         double minus = a - b;
         double product = a * b;
-        string chastnoeMessage;
         double chastnoe;
 
         if (b == 0)
         {
+            Console.WriteLine("Пометка: делить на 0 нельзя.  Результат деления будет равен 0.");
             chastnoe = 0;
-            chastnoeMessage = "Деление на 0 недопустимо!";
         }
         else
         {
             chastnoe = a / b;
-            chastnoeMessage = chastnoe.ToString();
         }
 
-        return (plus, minus, product, chastnoeMessage);
+        return new double[] { plus, minus, product, chastnoe };
     }
-
-    // --- Этап 1.1: Calcul (3 числа) ---
-    public static (double plus3, double product3, string chastnoeMessage3) Calcul(double a, double b, double c)
+    // --- Этап 1: Calcul (3 числа) ---
+    public static double[] Calcul(double a, double b, double c)
     {
         double plus3 = a + b + c;
         double product3 = a * b * c;
-        string chastnoeMessage3;
         double chastnoe3;
 
         if (b == 0 || c == 0)
         {
+            Console.WriteLine("Пометка: делить на 0 нельзя.  Результат деления будет равен 0.");
             chastnoe3 = 0;
-            chastnoeMessage3 = "Деление на 0 недопустимо!";
         }
         else
         {
             chastnoe3 = a / b / c;
-            chastnoeMessage3 = chastnoe3.ToString();
         }
 
-        return (plus3, product3, chastnoeMessage3);
+        return new double[] { plus3, product3, chastnoe3 };
     }
 
     // --- Этап 2: Min ---
@@ -178,8 +174,10 @@ public class Methods
             return;
         }
 
-        (double plus, double minus, double product, string chastnoeMessage) result1 = Calcul(a, b);
-        Console.WriteLine("Сумма: " + result1.plus + ", Разность: " + result1.minus + ", Произведение: " + result1.product + ", Частное: " + result1.chastnoeMessage);
+
+        double[] result1 = Calcul(a, b);
+        Console.WriteLine("Сумма: " + result1[0] + ", Разность: " + result1[1] + ", Произведение: " + result1[2] + ", Частное: " + result1[3]);
+
         Console.WriteLine("________________");
 
         Console.Write("Введите третье число: ");
@@ -189,8 +187,10 @@ public class Methods
             return;
         }
 
-        (double plus3, double product3, string chastnoeMessage3) resultCalcul3 = Calcul(a, b, c);
-        Console.WriteLine("Сумма 3 чисел: " + resultCalcul3.plus3 + ", Произведение 3 чисел: " + resultCalcul3.product3 + ", Частное 3 чисел: " + resultCalcul3.chastnoeMessage3);
+
+        double[] resultCalcul3 = Calcul(a, b, c);
+        Console.WriteLine("Сумма 3 чисел: " + resultCalcul3[0] + ", Произведение 3 чисел: " + resultCalcul3[1] + ", Частное 3 чисел: " + resultCalcul3[2]);
+
         Console.WriteLine("________________");
 
         Console.Write("Введите первое число для сравнения: ");
