@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Method2", "Method2\Method2.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{40B465E6-0E6E-49DD-B909-2046B6EE2751}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "morskoiBoy", "morskoiBoy\morskoiBoy.csproj", "{5772BC19-5597-4B25-BC50-57ED68A6546B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kvests", "Kvests\Kvests.csproj", "{8F59912E-623B-4B24-BE76-5C8DCD07A91A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{40B465E6-0E6E-49DD-B909-2046B6EE2751}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40B465E6-0E6E-49DD-B909-2046B6EE2751}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40B465E6-0E6E-49DD-B909-2046B6EE2751}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5772BC19-5597-4B25-BC50-57ED68A6546B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5772BC19-5597-4B25-BC50-57ED68A6546B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5772BC19-5597-4B25-BC50-57ED68A6546B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5772BC19-5597-4B25-BC50-57ED68A6546B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F59912E-623B-4B24-BE76-5C8DCD07A91A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F59912E-623B-4B24-BE76-5C8DCD07A91A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F59912E-623B-4B24-BE76-5C8DCD07A91A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F59912E-623B-4B24-BE76-5C8DCD07A91A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
