@@ -9,18 +9,6 @@ namespace morskoiBoy
     internal class Program
     {
 
-        //ЗАПОЛНЕНИЕ МАССИВА ИГРОКА
-        static string[,] FillPlayerArray(string[,] playerArray)
-        {
-
-            for (int i = 0; i < playerArray.GetLength(0); i++) {
-                for (int j = 0; j < playerArray.GetLength(1); j++){
-                    playerArray[i, j] = "*";
-                }
-            }
-            return playerArray;
-        }
-        
         //ЗАПОЛНЕНИЕ ЦВЕТНОГО МАССИВА ИГРОКА
         static string[,] FillColorPlayerArray(string[,] colorPlayerArray)
         {
@@ -32,12 +20,12 @@ namespace morskoiBoy
             return colorPlayerArray;
         }
 
-        //ЗАПОЛНЕНИЕ МАССИВА ОТКРЫТОГО БОТА
+        //ЗАПОЛНЕНИЕ МАССИВА БОТА
         static string[,] FillBotArray(string[,] botArray)
         {
             for (int i = 0; i < botArray.GetLength(0); i++)
             {
-                for (int j = 0; j < botArray.GetLength(1); j++)
+                for (int j = 0; j < 10; j++)
                 {
                     botArray[i, j] = "*";
                 }
@@ -45,41 +33,30 @@ namespace morskoiBoy
             return botArray;
         }
 
-        //ЗАПОЛНЕНИЕ ЗАКРЫТОГО МАССИВА БОТА
-        static string[,] FillBotVoidArray(string[,] botVoidArray)
-        {
-            for (int i = 0; i < botVoidArray.GetLength(0); i++)
-            {
-                for (int j = 0; j < botVoidArray.GetLength(1); j++)
-                {
-                   botVoidArray[i, j] = "*";
-                }
-            }
-            return botVoidArray;
-        }
-
         //ЗАПОЛНЕНИЕ СЛОВАРЯ КОРАБЛЕЙ ИГРОКА
-        static Dictionary<string, int> FillPlayerShips(Dictionary<string, int> shipsPlayer)
+        static Dictionary<string, int> FillPlayerShips(Dictionary<string, int> playerShips)
         {
-            shipsPlayer.Add("4-х палубный", 1);
-            shipsPlayer.Add("3-х палубный", 2);
-            shipsPlayer.Add("2-х палубный", 3);
-            shipsPlayer.Add("1 палубный", 4);
+            playerShips.Add("4-х палубный", 1);
+            playerShips.Add("3-х палубный", 2);
+            playerShips.Add("2-х палубный", 3);
+            playerShips.Add("1 палубный", 4);
             
-            return shipsPlayer;
+            return playerShips;
         }
-        //ЗАПОЛНЕНИЕ СЛОВАРЯ КОРАБЛЕЙ БОТА
-        static Dictionary<string, int> FillBotShips(Dictionary<string, int> shipsBot)
-        {
-            shipsBot.Add("4-х палубный", 1);
-            shipsBot.Add("3-х палубный", 2);
-            shipsBot.Add("2-х палубный", 3);
-            shipsBot.Add("1 палубный", 4);
 
-            return shipsBot;
+        //ЗАПОЛНЕНИЕ СЛОВАРЯ КОРАБЛЕЙ БОТА
+        static Dictionary<string, int> FillBotShips(Dictionary<string, int> botShips)
+        {
+            botShips.Add("4-х палубный", 1);
+            botShips.Add("3-х палубный", 2);
+            botShips.Add("2-х палубный", 3);
+            botShips.Add("1 палубный", 4);
+
+            return botShips;
         }
+
         //РАССТАНОВКА КОРАБЛЕЙ ИГРОКА
-        static string[,] ArrangePlayerArray(string[,] colorPlayerArray)
+        static void ArrangePlayerArray(string[,] colorPlayerArray, Dictionary<string, int> playerShips)
         {
             int coordinateI = 0;
             int coordinateJ = 0;
@@ -92,57 +69,44 @@ namespace morskoiBoy
             {
                 CheckPlayerArray(colorPlayerArray, coordinateI, coordinateJ);
                 string movement = Console.ReadLine();
-                switch (movement)
+                switch (movement.ToLower())
                 {
                     case ("w"):
                         if (coordinateI > 0)
                         {
                             coordinateI--;
-                            //counter = 0;
                         }
                         break;
                     case ("a"):
                         if (coordinateJ > 0)
                         {
                             coordinateJ--;
-                            //counter = 0;
                         }
                         break;
                     case ("s"):
                         if (coordinateI < 9)
                         {
                             coordinateI++;
-                            //counter = 0;
                         }
                         break;
                     case ("d"):
                         if (coordinateJ < 9)
                         {
-                            //counter = 0;
                             coordinateJ++;
                         }
                         break;
                     case (""):
-                        if (counter < 4 && colorPlayerArray[coordinateI, coordinateJ] != "-")
+                        if (colorPlayerArray[coordinateI, coordinateJ] != "-")
                         {
                             colorPlayerArray[coordinateI, coordinateJ] = "-";
                             counterShips++;
                             counter++;
                         }
-                        else if (counter == 3)
-                        {
-                            
-                        }
-                        break;
-                    case ("f"):
-                        break;
-                    default:
-                        Console.WriteLine("ВЫ ВВЕЛИ НЕПРАВИЛЬНОЕ ЗНАЧЕНИЕ");
                         break;
                 }
             }
-            return colorPlayerArray;
         }
+
         //ВЫВОДИМ ЦВЕТНОЙ МАССИВ ИГРОКА
         static void CheckPlayerArray(string[,] colorPlayerArray, int coordinateI, int coordinateJ)
         {
@@ -194,23 +158,20 @@ namespace morskoiBoy
             Console.ResetColor();
             Console.WriteLine("----------------------------");
         }
+
         static void Main(string[] args)
         {   
             //СОЗДАЁМ МАССИВЫ
-            string[,] playerArray = new string[10, 11];
             string[,] colorPlayerArray = new string[10, 11];
-            string[,] botArray = new string[10, 10];
-            string[,] botVoidArray = new string[10, 11];
+            string[,] botArray = new string[10, 11];
 
             //СОЗДАЁМ СЛОВАРИ
             Dictionary<string, int> playerShips = new Dictionary<string, int>();
             Dictionary<string, int> botShips = new Dictionary<string, int>();
 
             //ЗАПОЛНЯЕМ МАССИВЫ
-            FillPlayerArray(playerArray);
             FillColorPlayerArray(colorPlayerArray);
             FillBotArray(botArray);
-            FillBotVoidArray(botVoidArray);
 
             //ЗАПОЛНЯЕМ СЛОВАРИ
             FillPlayerShips(playerShips);
@@ -218,7 +179,7 @@ namespace morskoiBoy
 
             //ИНИЦИАЛИЗАЦИЯ ИГРЫ
             Console.WriteLine("Добро пожаловать в игру morskoiBoy");
-            ArrangePlayerArray(colorPlayerArray);
+            ArrangePlayerArray(colorPlayerArray, playerShips);
             CheckPlayerArray(colorPlayerArray, 0, 0);
             Console.ReadKey();
 
