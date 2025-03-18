@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "morskoiBoy", "morskoiBoy\mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kvests", "Kvests\Kvests.csproj", "{8F59912E-623B-4B24-BE76-5C8DCD07A91A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Class1", "Class1\Class1.csproj", "{A2DE955A-ED39-4388-A3EF-7171EC8D4867}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{8F59912E-623B-4B24-BE76-5C8DCD07A91A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F59912E-623B-4B24-BE76-5C8DCD07A91A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F59912E-623B-4B24-BE76-5C8DCD07A91A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2DE955A-ED39-4388-A3EF-7171EC8D4867}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2DE955A-ED39-4388-A3EF-7171EC8D4867}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2DE955A-ED39-4388-A3EF-7171EC8D4867}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2DE955A-ED39-4388-A3EF-7171EC8D4867}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

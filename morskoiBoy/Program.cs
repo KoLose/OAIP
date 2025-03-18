@@ -84,11 +84,11 @@ namespace morskoiBoy
             int coordinateI = 0;
             int coordinateJ = 0;
             int counter = 0;
-            bool loop = true;
+            int counterShips = 0;
 
             Console.WriteLine("РАССТАВЬТЕ ВАШИ КОРАБЛИ");
-            
-            while (loop == true)
+
+            while (counterShips != 20)
             {
                 CheckPlayerArray(colorPlayerArray, coordinateI, coordinateJ);
                 string movement = Console.ReadLine();
@@ -96,36 +96,58 @@ namespace morskoiBoy
                 {
                     case ("w"):
                         if (coordinateI > 0)
+                        {
                             coordinateI--;
+                            //counter = 0;
+                        }
                         break;
                     case ("a"):
                         if (coordinateJ > 0)
+                        {
                             coordinateJ--;
+                            //counter = 0;
+                        }
                         break;
                     case ("s"):
                         if (coordinateI < 9)
+                        {
                             coordinateI++;
+                            //counter = 0;
+                        }
                         break;
                     case ("d"):
                         if (coordinateJ < 9)
+                        {
+                            //counter = 0;
                             coordinateJ++;
+                        }
                         break;
-                    case ("e"):
-                        counter++;
+                    case (""):
+                        if (counter < 4 && colorPlayerArray[coordinateI, coordinateJ] != "-")
+                        {
+                            colorPlayerArray[coordinateI, coordinateJ] = "-";
+                            counterShips++;
+                            counter++;
+                        }
+                        else if (counter == 3)
+                        {
+                            
+                        }
                         break;
                     case ("f"):
-                        loop = false;
+                        break;
+                    default:
+                        Console.WriteLine("ВЫ ВВЕЛИ НЕПРАВИЛЬНОЕ ЗНАЧЕНИЕ");
                         break;
                 }
             }
-                return colorPlayerArray;
+            return colorPlayerArray;
         }
-
         //ВЫВОДИМ ЦВЕТНОЙ МАССИВ ИГРОКА
         static void CheckPlayerArray(string[,] colorPlayerArray, int coordinateI, int coordinateJ)
         {
             Console.Clear();
-            Console.WriteLine("    A B C D E F G H J K\n---------------------------");
+            Console.WriteLine("    A B C D E F G H J K\n----------------------------");
          
             for (int i = 0; i < colorPlayerArray.GetLength(0); i++) {
                 Console.ResetColor();
@@ -138,39 +160,39 @@ namespace morskoiBoy
                     Console.Write((i + 1) + "  ");
                 }
 
-                Console.ForegroundColor = ConsoleColor.DarkBlue;
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.BackgroundColor = ConsoleColor.DarkBlue;
 
                 for (int j = 0; j < colorPlayerArray.GetLength(1); j++)
                 {
                     if (i == coordinateI && j == coordinateJ)
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.BackgroundColor = ConsoleColor.Red;
                         Console.Write("X");
                     }
+    
                     else
                     {
                         Console.Write(colorPlayerArray[i, j]);
                     }
-                    //Console.ForegroundColor = ConsoleColor.White;
-                    //Console.BackgroundColor = ConsoleColor.DarkBlue;
+
                     if (j < colorPlayerArray.GetLength(1) - 1)
                     {
                         Console.Write(" ");
                     }
 
-                    Console.ForegroundColor = ConsoleColor.DarkBlue;
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.BackgroundColor = ConsoleColor.DarkBlue;
                 }
                 Console.ResetColor();
-                Console.Write(" " + (i + 1));
-                Console.ForegroundColor = ConsoleColor.DarkBlue;
+                Console.Write("  " + (i + 1));
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.BackgroundColor = ConsoleColor.DarkBlue;
                 Console.WriteLine();
             }
             Console.ResetColor();
-            Console.WriteLine("---------------------------");
+            Console.WriteLine("----------------------------");
         }
         static void Main(string[] args)
         {   
@@ -198,6 +220,7 @@ namespace morskoiBoy
             Console.WriteLine("Добро пожаловать в игру morskoiBoy");
             ArrangePlayerArray(colorPlayerArray);
             CheckPlayerArray(colorPlayerArray, 0, 0);
+            Console.ReadKey();
 
         }
 
