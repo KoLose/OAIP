@@ -67,6 +67,7 @@ namespace morskoiBoy
             int counterShips = 0;
             bool value = false;
             bool value1 = true;
+            bool value2 = true;
             string direction = "";
 
             Console.WriteLine("РАССТАВЬТЕ ВАШИ КОРАБЛИ: 4-ПАЛУБНЫЕ..3 И ПОПОРЯДКУ");
@@ -193,10 +194,10 @@ namespace morskoiBoy
                         }
                         break;
                     case (""):
-                        if (colorPlayerArray[coordinateI, coordinateJ] == "*" && value == false)
+                        Console.WriteLine(coordinateI + " " + coordinateJ);
+                        value2 = ThirdSecurityArrangeShip(value2, maxCounter, coordinateI, coordinateJ, colorPlayerArray);
+                        if (colorPlayerArray[coordinateI, coordinateJ] == "*" && value == false && value2)
                         {
-                            
-                            
                                 colorPlayerArray[coordinateI, coordinateJ] = "-";
                                 counter++;
                                 value = true;
@@ -278,7 +279,7 @@ namespace morskoiBoy
             }
         }
 
-        //ЦЕЛОСТНОСТЬ РАССТАНОВКИ КОРАБЛЕЙ НА КРАЮ МАССИВА
+        //ЦЕЛОСТНОСТЬ РАССТАНОВКИ КОРАБЛЕЙ ПРИ НАЛОЖЕНИЕ ДРУГ НА ДРУГА
         static bool SecondSecurityArrangeShips(bool value1, string movement, int maxCounter, int counter, int coordinateI, int coordinateJ, string[,] colorPlayerArray)
         {
             try
@@ -291,7 +292,7 @@ namespace morskoiBoy
                         if (colorPlayerArray[coordinateI, coordinateJ] == "#")
                         {
                             value1 = false;
-                            break; // Прерываем цикл, если нашли занятую клетку
+                            break; 
                         }
                     }
                 }
@@ -336,6 +337,25 @@ namespace morskoiBoy
             }
             catch (IndexOutOfRangeException) { }
             return value1;
+        }
+
+        // ЦЕЛОСТНОСТЬ РАССТАНОВКИ КОРАБЛЕЙ С ЗАСТРЕВАНИЕМ В 1 БЛОКЕ
+       static bool ThirdSecurityArrangeShip (bool value2, int maxCounter, int coordinateI, int coordinateJ, string[,] colorPlayerArray)
+        {
+            int i = 0;
+            try
+            { while (i < maxCounter)
+                {
+                    if (colorPlayerArray[coordinateI--, coordinateJ] == "#")
+                    {
+
+                    }
+                }
+             
+            }
+            catch(IndexOutOfRangeException) { }
+            return value2;
+                      
         }
         //ВЫВОДИМ ЦВЕТНОЙ МАССИВ ИГРОКА
         static void CheckPlayerArray(string[,] colorPlayerArray, int coordinateI, int coordinateJ, Dictionary <string, int> playerShips)
