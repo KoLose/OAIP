@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -61,56 +63,245 @@ namespace morskoiBoy
             int coordinateI = 0;
             int coordinateJ = 0;
             int counter = 0;
+            int maxCounter = 5;
             int counterShips = 0;
+            bool value = false;
+            bool value1 = true;
+            string direction = "";
 
-            Console.WriteLine("РАССТАВЬТЕ ВАШИ КОРАБЛИ");
+            Console.WriteLine("РАССТАВЬТЕ ВАШИ КОРАБЛИ: 4-ПАЛУБНЫЕ..3 И ПОПОРЯДКУ");
 
             while (counterShips != 20)
             {
-                CheckPlayerArray(colorPlayerArray, coordinateI, coordinateJ);
+                CheckPlayerArray(colorPlayerArray, coordinateI, coordinateJ, playerShips);
+
                 string movement = Console.ReadLine();
                 switch (movement.ToLower())
                 {
                     case ("w"):
                         if (coordinateI > 0)
                         {
-                            coordinateI--;
+                            if (value && value1 && (direction == "vertical" || direction == "") && counter <= maxCounter)
+                            {
+                                FirstSecurityArrangeShips(colorPlayerArray, coordinateI, coordinateJ);
+                                colorPlayerArray[coordinateI, coordinateJ] = "-";
+                                coordinateI--;
+                                counter++;
+                                counterShips++;
+                                direction = "vertical";
+                            }
+                            else
+                            {
+                                coordinateI--;
+                            }
                         }
                         break;
+
                     case ("a"):
                         if (coordinateJ > 0)
                         {
-                            coordinateJ--;
+                          
+                            if (value && value1 && (direction == "horizontal" || direction == "") && counter <= maxCounter)
+                            {
+                                FirstSecurityArrangeShips(colorPlayerArray, coordinateI, coordinateJ);
+
+                                colorPlayerArray[coordinateI, coordinateJ] = "-";
+                                coordinateJ--;
+                                counter++;
+                                counterShips++;
+                                direction = "horizontal";
+                            }
+                            else
+                            {
+                                coordinateJ--;
+                            }
                         }
                         break;
+
                     case ("s"):
                         if (coordinateI < 9)
                         {
-                            coordinateI++;
+                          
+                            if (value && value1 && (direction == "vertical" || direction == "") && counter <= maxCounter)
+                            {
+                                FirstSecurityArrangeShips(colorPlayerArray, coordinateI, coordinateJ);
+
+                                colorPlayerArray[coordinateI, coordinateJ] = "-";
+                                coordinateI++;
+                                counter++;
+                                counterShips++;
+                                direction = "vertical";
+                            }
+                            else
+                            {
+                                coordinateI++;
+                            }
                         }
                         break;
+
                     case ("d"):
                         if (coordinateJ < 9)
                         {
-                            coordinateJ++;
+                           
+                            if (value && value1 && (direction == "horizontal" || direction == "") && counter <= maxCounter)
+                            {
+                                FirstSecurityArrangeShips(colorPlayerArray, coordinateI, coordinateJ);
+
+                                colorPlayerArray[coordinateI, coordinateJ] = "-";
+                                coordinateJ++;
+                                counter++;
+                                counterShips++;
+                                direction = "horizontal";
+                            }
+                            else
+                            {
+                                coordinateJ++;
+                            }
                         }
                         break;
                     case (""):
-                        if (colorPlayerArray[coordinateI, coordinateJ] != "-")
+                        if (colorPlayerArray[coordinateI, coordinateJ] == "*" && value == false)
                         {
+                            SecondSecurityArrangeShips(value1, movement, maxCounter, counter, coordinateI, coordinateJ, colorPlayerArray);
                             colorPlayerArray[coordinateI, coordinateJ] = "-";
-                            counterShips++;
                             counter++;
+                            value = true;
                         }
                         break;
                 }
+                if (counter == maxCounter)
+                {
+                    if (maxCounter == 5)
+                    {
+                        playerShips["4-х палубный"]--;
+                    }
+                    else if (maxCounter == 4)
+                    {
+                        playerShips["3-х палубный"]--;
+                    }
+                    else if (maxCounter == 3)
+                    {
+                        playerShips["2-х палубный"]--;
+                    }
+                    else if (maxCounter == 2)
+                    {
+                        playerShips["1 палубный"]--;
+                    }
+                    direction = "";
+                    value = false;
+                    counter = 0;
+                }
+                if (playerShips["4-х палубный"] > 0)
+                {
+                    maxCounter = 5;
+                }
+                else if (playerShips["3-х палубный"] > 0)
+                {
+                    maxCounter = 4;
+                }
+                else if (playerShips["2-х палубный"] > 0)
+                {
+                    maxCounter = 3;
+                }
+                else if (playerShips["1 палубный"] > 0)
+                {
+                    maxCounter = 2;
+                }
+                foreach (var item in playerShips)
+                {
+                    Console.WriteLine($"{item.Key}: {item.Value}");
+                }
+                Console.WriteLine(counter);
+                Console.WriteLine(maxCounter);
+                Console.WriteLine(counterShips);
+                Console.WriteLine(value1);
             }
         }
 
-        //ВЫВОДИМ ЦВЕТНОЙ МАССИВ ИГРОКА
-        static void CheckPlayerArray(string[,] colorPlayerArray, int coordinateI, int coordinateJ)
+        //ЦЕЛОСТНОСТЬ РАССТАНОВКИ КОРАБЛЕЙ БЛИЗКО ДРУГ ДРУГУ
+        static void FirstSecurityArrangeShips(string[,] colorPlayerArray, int coordinateI, int coordinateJ)
         {
-            Console.Clear();
+            try
+            {
+                for (int i = -1; i <= 1; i++)
+                {
+                    for (int j = -1; j <= 1; j++)
+                    {
+                        int newI = coordinateI + i;
+                        int newJ = coordinateJ + j;
+
+                        if (newI >= 0 && newI < 10 && newJ >= 0 && newJ < 10 && colorPlayerArray[newI, newJ] == "*")
+                        {
+                            colorPlayerArray[newI, newJ] = "#";
+                        }
+                    }
+                }
+            }
+            catch (IndexOutOfRangeException)
+            {
+            }
+        }
+
+        //ЦЕЛОСТНОСТЬ РАССТАНОВКИ КОРАБЛЕЙ НА КРАЮ МАССИВА
+        static bool SecondSecurityArrangeShips(bool value1, string movement, int maxCounter, int counter, int coordinateI, int coordinateJ, string[,] colorPlayerArray)
+        {
+                try
+                {
+                    if (movement == "w")
+                    {
+                        for (int i = 0; i < maxCounter - 1; i++)
+                        {
+                            coordinateI--;
+                            if (colorPlayerArray[coordinateI, coordinateJ] == "#")
+                            {
+                                value1 = false;
+                            }
+                        }
+                    }
+                    else if (movement == "a")
+                    {
+                        for (int i = 0; i < maxCounter - 1; i++)
+                        {
+                            coordinateJ--;
+                            if (colorPlayerArray[coordinateI, coordinateJ] == "#")
+                            {
+                                value1 = false;
+                            }
+                        }
+                    }
+                    else if (movement == "s")
+                    {
+                        for (int i = 0; i < maxCounter - 1; i++)
+                        {
+                            coordinateI++;
+                            if (colorPlayerArray[coordinateI, coordinateJ] == "#")
+                            {
+                                value1 = false;
+                            }
+                        }
+                    }
+                    else if (movement == "d")
+                    {
+                        for (int i = 0; i < maxCounter - 1; i++)
+                        {
+                            coordinateJ++;
+                            if (colorPlayerArray[coordinateI, coordinateJ] == "#")
+                            {
+                                value1 = false;
+                            }
+                        }
+                    }
+                }
+                
+                catch (IndexOutOfRangeException) { }
+            Console.WriteLine(coordinateI + " " +coordinateJ);
+            return value1;
+
+        }
+        //ВЫВОДИМ ЦВЕТНОЙ МАССИВ ИГРОКА
+        static void CheckPlayerArray(string[,] colorPlayerArray, int coordinateI, int coordinateJ, Dictionary <string, int> playerShips)
+        {
+            //Console.Clear();
             Console.WriteLine("    A B C D E F G H J K\n----------------------------");
          
             for (int i = 0; i < colorPlayerArray.GetLength(0); i++) {
@@ -180,7 +371,7 @@ namespace morskoiBoy
             //ИНИЦИАЛИЗАЦИЯ ИГРЫ
             Console.WriteLine("Добро пожаловать в игру morskoiBoy");
             ArrangePlayerArray(colorPlayerArray, playerShips);
-            CheckPlayerArray(colorPlayerArray, 0, 0);
+            CheckPlayerArray(colorPlayerArray, 0, 0, playerShips);
             Console.ReadKey();
 
         }
