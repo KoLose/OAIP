@@ -70,14 +70,7 @@ namespace morskoiBoy
                                 coordinateI--;
                                 counter++;
                                 counterShips++;
-                                direction = "w";
-                                if (counter + 1 == maxCounter)
-                                {
-                                    direction = "";
-                                    value = false;
-                                    colorPlayerArray[coordinateI, coordinateJ] = "-";
-                                    counterShips++;
-                                }
+                                direction = "vertical";
                             }
                             else if (value1 == false && counter == 1)
                             {
@@ -108,14 +101,7 @@ namespace morskoiBoy
                                 coordinateJ--;
                                 counter++;
                                 counterShips++;
-                                direction = "a";
-                                if (counter + 1 == maxCounter)
-                                {
-                                    direction = "";
-                                    value = false;
-                                    colorPlayerArray[coordinateI, coordinateJ] = "-";
-                                    counterShips++;
-                                }
+                                direction = "horizontal";
                             }
                             else if (value1 == false && counter == 1)
                             {
@@ -146,14 +132,7 @@ namespace morskoiBoy
                                 coordinateI++;
                                 counter++;
                                 counterShips++;
-                                direction = "s";
-                                if (counter + 1 == maxCounter)
-                                {
-                                    direction = "";
-                                    value = false;
-                                    colorPlayerArray[coordinateI, coordinateJ] = "-";
-                                    counterShips++;
-                                }
+                                direction = "vertical";
                             }
                             else if (value1 == false && counter == 1)
                             {
@@ -184,14 +163,7 @@ namespace morskoiBoy
                                 coordinateJ++;
                                 counter++;
                                 counterShips++;
-                                direction = "d";
-                                if (counter + 1 == maxCounter)
-                                {
-                                    direction = "";
-                                    value = false;
-                                    colorPlayerArray[coordinateI, coordinateJ] = "-";
-                                    counterShips++;
-                                }
+                                direction = "horizontal";
                             }
                             else if (value1 == false && counter == 1)
                             {
