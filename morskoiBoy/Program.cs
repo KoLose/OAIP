@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,54 +11,31 @@ namespace morskoiBoy
 {
     internal class Program
     {
-
-        //ЗАПОЛНЕНИЕ ЦВЕТНОГО МАССИВА ИГРОКА
-        static string[,] FillColorPlayerArray(string[,] colorPlayerArray)
+        //ЗАПОЛНЕНИЕ МАССИВОВ
+        static string[,] FillArray(string[,] array)
         {
-            for(int i = 0;i < colorPlayerArray.GetLength(0); i++) {
-                for (int j = 0; j < 10; j++) {
-                    colorPlayerArray[i, j] = "*";
-                }
-            }
-            return colorPlayerArray;
-        }
-
-        //ЗАПОЛНЕНИЕ МАССИВА БОТА
-        static string[,] FillBotArray(string[,] botArray)
-        {
-            for (int i = 0; i < botArray.GetLength(0); i++)
+            for (int i = 0; i < array.GetLength(0); i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    botArray[i, j] = "*";
+                    array[i, j] = "*";
                 }
             }
-            return botArray;
+            return array;
         }
 
-        //ЗАПОЛНЕНИЕ СЛОВАРЯ КОРАБЛЕЙ ИГРОКА
-        static Dictionary<string, int> FillPlayerShips(Dictionary<string, int> playerShips)
+        //ЗАПОЛНЕНИЕ СЛОВАРЕЙ
+        static Dictionary<string, int> FillShips(Dictionary<string, int> dictionaryShips)
         {
-            playerShips.Add("4-х палубный", 1);
-            playerShips.Add("3-х палубный", 2);
-            playerShips.Add("2-х палубный", 3);
-            playerShips.Add("1 палубный", 4);
-            
-            return playerShips;
+            dictionaryShips.Add("4-х палубный", 1);
+            dictionaryShips.Add("3-х палубный", 2);
+            dictionaryShips.Add("2-х палубный", 3);
+            dictionaryShips.Add("1 палубный", 4);
+
+            return dictionaryShips;
         }
 
-        //ЗАПОЛНЕНИЕ СЛОВАРЯ КОРАБЛЕЙ БОТА
-        static Dictionary<string, int> FillBotShips(Dictionary<string, int> botShips)
-        {
-            botShips.Add("4-х палубный", 1);
-            botShips.Add("3-х палубный", 2);
-            botShips.Add("2-х палубный", 3);
-            botShips.Add("1 палубный", 4);
-
-            return botShips;
-        }
-
-        //РАССТАНОВКА КОРАБЛЕЙ ИГРОКА
+        //РАССТАНОВКА КОРАБЛЕЙ
         static void ArrangePlayerArray(string[,] colorPlayerArray, Dictionary<string, int> playerShips)
         {
             int coordinateI = 0;
@@ -74,7 +52,7 @@ namespace morskoiBoy
             while (counterShips != 20)
             {
                 CheckPlayerArray(colorPlayerArray, coordinateI, coordinateJ, playerShips);
-
+                Console.WriteLine("counterships: " + counterShips);
                 string movement = Console.ReadLine();
                 switch (movement.ToLower())
                 {
@@ -83,21 +61,31 @@ namespace morskoiBoy
                         {
                             if (counter == 1)
                             {
-                                value1 = SecondSecurityArrangeShips(value1, movement, maxCounter, counter, coordinateI, coordinateJ, colorPlayerArray);
+                                value1 = SecondSecurityArrangeShips(value1, movement, maxCounter, coordinateI, coordinateJ, colorPlayerArray);
                             }
-                            if (value && value1 && (direction == "vertical" || direction == "") && counter <= maxCounter)
+                            if (value && value1 && (direction == "" || direction == "w") && counter + 1 <= maxCounter)
                             {
                                 FirstSecurityArrangeShips(colorPlayerArray, coordinateI, coordinateJ);
                                 colorPlayerArray[coordinateI, coordinateJ] = "-";
                                 coordinateI--;
                                 counter++;
                                 counterShips++;
-                                direction = "vertical";
+                                direction = "w";
+                                if (counter + 1 == maxCounter)
+                                {
+                                    direction = "";
+                                    value = false;
+                                    colorPlayerArray[coordinateI, coordinateJ] = "-";
+                                    counterShips++;
+                                }
                             }
                             else if (value1 == false && counter == 1)
                             {
                                 colorPlayerArray[coordinateI, coordinateJ] = "*";
                                 value1 = true;
+                            }
+                            else if (direction != "" && direction != "w")
+                            {
                             }
                             else
                             {
@@ -111,22 +99,31 @@ namespace morskoiBoy
                         {
                             if (counter == 1)
                             {
-                                value1 = SecondSecurityArrangeShips(value1, movement, maxCounter, counter, coordinateI, coordinateJ, colorPlayerArray);
+                                value1 = SecondSecurityArrangeShips(value1, movement, maxCounter, coordinateI, coordinateJ, colorPlayerArray);
                             }
-                            if (value && value1 && (direction == "horizontal" || direction == "") && counter <= maxCounter)
+                            if (value && value1 && (direction == "" || direction == "a") && counter + 1 <= maxCounter)
                             {
                                 FirstSecurityArrangeShips(colorPlayerArray, coordinateI, coordinateJ);
-
                                 colorPlayerArray[coordinateI, coordinateJ] = "-";
                                 coordinateJ--;
                                 counter++;
                                 counterShips++;
-                                direction = "horizontal";
+                                direction = "a";
+                                if (counter + 1 == maxCounter)
+                                {
+                                    direction = "";
+                                    value = false;
+                                    colorPlayerArray[coordinateI, coordinateJ] = "-";
+                                    counterShips++;
+                                }
                             }
                             else if (value1 == false && counter == 1)
                             {
                                 colorPlayerArray[coordinateI, coordinateJ] = "*";
                                 value1 = true;
+                            }
+                            else if (direction != "" && direction != "a")
+                            {
                             }
                             else
                             {
@@ -140,22 +137,31 @@ namespace morskoiBoy
                         {
                             if (counter == 1)
                             {
-                                value1 = SecondSecurityArrangeShips(value1, movement, maxCounter, counter, coordinateI, coordinateJ, colorPlayerArray);
+                                value1 = SecondSecurityArrangeShips(value1, movement, maxCounter, coordinateI, coordinateJ, colorPlayerArray);
                             }
-                            if (value && value1 && (direction == "vertical" || direction == "") && counter <= maxCounter)
+                            if (value && value1 && (direction == "" || direction == "s") && counter + 1 <= maxCounter)
                             {
                                 FirstSecurityArrangeShips(colorPlayerArray, coordinateI, coordinateJ);
-
                                 colorPlayerArray[coordinateI, coordinateJ] = "-";
                                 coordinateI++;
                                 counter++;
                                 counterShips++;
-                                direction = "vertical";
+                                direction = "s";
+                                if (counter + 1 == maxCounter)
+                                {
+                                    direction = "";
+                                    value = false;
+                                    colorPlayerArray[coordinateI, coordinateJ] = "-";
+                                    counterShips++;
+                                }
                             }
                             else if (value1 == false && counter == 1)
                             {
                                 colorPlayerArray[coordinateI, coordinateJ] = "*";
                                 value1 = true;
+                            }
+                            else if (direction != "" && direction != "s")
+                            {
                             }
                             else
                             {
@@ -169,22 +175,32 @@ namespace morskoiBoy
                         {
                             if (counter == 1)
                             {
-                                value1 = SecondSecurityArrangeShips(value1, movement, maxCounter, counter, coordinateI, coordinateJ, colorPlayerArray);
+                                value1 = SecondSecurityArrangeShips(value1, movement, maxCounter, coordinateI, coordinateJ, colorPlayerArray);
                             }
-                            if (value && value1 && (direction == "horizontal" || direction == "") && counter <= maxCounter)
+                            if (value && value1 && (direction == "" || direction == "d") && counter + 1 <= maxCounter)
                             {
                                 FirstSecurityArrangeShips(colorPlayerArray, coordinateI, coordinateJ);
-
                                 colorPlayerArray[coordinateI, coordinateJ] = "-";
                                 coordinateJ++;
                                 counter++;
                                 counterShips++;
-                                direction = "horizontal";
+                                direction = "d";
+                                if (counter + 1 == maxCounter)
+                                {
+                                    direction = "";
+                                    value = false;
+                                    colorPlayerArray[coordinateI, coordinateJ] = "-";
+                                    counterShips++;
+                                }
                             }
                             else if (value1 == false && counter == 1)
                             {
                                 colorPlayerArray[coordinateI, coordinateJ] = "*";
                                 value1 = true;
+                                counterShips++;
+                            }
+                            else if (direction != "" && direction != "d")
+                            {
                             }
                             else
                             {
@@ -193,20 +209,17 @@ namespace morskoiBoy
                         }
                         break;
                     case (""):
-                        if (colorPlayerArray[coordinateI, coordinateJ] == "*" && value == false)
+                        value1 = SecondSecurityArrangeShips(value1, movement, maxCounter, coordinateI, coordinateJ, colorPlayerArray);
+                        if (colorPlayerArray[coordinateI, coordinateJ] == "*" && value1 && counter == 0)
                         {
-                            
-                            
-                                colorPlayerArray[coordinateI, coordinateJ] = "-";
-                                counter++;
-                                value = true;
-                            value1 = true;
-                        
+                            colorPlayerArray[coordinateI, coordinateJ] = "-";
+                            counter++;
+                            value = true;
                         }
                         break;
                 }
 
-                if (counter == maxCounter)
+                if (counter + 1 == maxCounter)
                 {
                     if (maxCounter == 5)
                     {
@@ -222,8 +235,10 @@ namespace morskoiBoy
                     }
                     else if (maxCounter == 2)
                     {
+                        counterShips++;
                         playerShips["1 палубный"]--;
                     }
+                    FirstSecurityArrangeShips(colorPlayerArray, coordinateI, coordinateJ);
                     direction = "";
                     value = false;
                     counter = 0;
@@ -250,7 +265,7 @@ namespace morskoiBoy
                 }
                 Console.WriteLine(counter);
                 Console.WriteLine(maxCounter);
-                Console.WriteLine(value1);
+                Console.WriteLine("value1Number1 = " + value1);
             }
         }
 
@@ -279,71 +294,201 @@ namespace morskoiBoy
         }
 
         //ЦЕЛОСТНОСТЬ РАССТАНОВКИ КОРАБЛЕЙ НА КРАЮ МАССИВА
-        static bool SecondSecurityArrangeShips(bool value1, string movement, int maxCounter, int counter, int coordinateI, int coordinateJ, string[,] colorPlayerArray)
+        static bool SecondSecurityArrangeShips(bool value1, string movement, int maxCounter, int coordinateI, int coordinateJ, string[,] colorPlayerArray)
         {
-            try
+            int counter = 0;
+            int maxCounter2 = 4;
+            int newCoordinateI = coordinateI;
+            int newCoordinateJ = coordinateJ;
+            bool value2 = true;
+
+            if (movement == "w" || movement == "a" || movement == "s" || movement == "d")
             {
-                if (movement == "w")
+                try
                 {
-                    for (int i = 2; i < maxCounter; i++)
+                    if (movement == "w")
+                    {
+                        for (int i = 2; i < maxCounter; i++)
+                        {
+                            coordinateI--;
+                            if (colorPlayerArray[coordinateI, coordinateJ] == "#")
+                            {
+                                value1 = false;
+                                break;
+                            }
+                        }
+                    }
+                    else if (movement == "a")
+                    {
+                        for (int i = 2; i < maxCounter; i++)
+                        {
+                            coordinateJ--;
+                            if (colorPlayerArray[coordinateI, coordinateJ] == "#")
+                            {
+                                value1 = false;
+                                break;
+                            }
+                        }
+                    }
+                    else if (movement == "s")
+                    {
+                        for (int i = 2; i < maxCounter; i++)
+                        {
+                            coordinateI++;
+                            if (colorPlayerArray[coordinateI, coordinateJ] == "#")
+                            {
+                                value1 = false;
+                                break;
+                            }
+                        }
+                    }
+                    else if (movement == "d")
+                    {
+                        for (int i = 2; i < maxCounter; i++)
+                        {
+                            coordinateJ++;
+                            if (colorPlayerArray[coordinateI, coordinateJ] == "#")
+                            {
+                                value1 = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    value2 = false;
+                }
+            }
+
+            if (movement == "")
+            {
+                coordinateI = newCoordinateI;
+                coordinateJ = newCoordinateJ;
+
+                for (int i = 2; i < maxCounter; i++)
+                {
+                    try
                     {
                         coordinateI--;
                         if (colorPlayerArray[coordinateI, coordinateJ] == "#")
                         {
+                            counter++;
                             value1 = false;
-                            break; // Прерываем цикл, если нашли занятую клетку
+                            Console.WriteLine("w");
+                        }
+                        else
+                        {
+                            Console.WriteLine("w+");
                         }
                     }
+                    catch (IndexOutOfRangeException)
+                    {
+                        maxCounter2--;
+                        break;
+                    }
                 }
-                else if (movement == "a")
+
+                coordinateI = newCoordinateI;
+                coordinateJ = newCoordinateJ;
+
+                for (int i = 2; i < maxCounter; i++)
                 {
-                    for (int i = 2; i < maxCounter; i++)
+                    try
                     {
                         coordinateJ--;
                         if (colorPlayerArray[coordinateI, coordinateJ] == "#")
                         {
+                            counter++;
                             value1 = false;
-                            break;
+                            Console.WriteLine("a");
+                        }
+                        else
+                        {
+                            Console.WriteLine("a+");
                         }
                     }
+                    catch (IndexOutOfRangeException)
+                    {
+                        maxCounter2--;
+                        break;
+                    }
                 }
-                else if (movement == "s")
+
+                coordinateI = newCoordinateI;
+                coordinateJ = newCoordinateJ;
+
+                for (int i = 2; i < maxCounter; i++)
                 {
-                    for (int i = 2; i < maxCounter; i++)
+                    try
                     {
                         coordinateI++;
                         if (colorPlayerArray[coordinateI, coordinateJ] == "#")
                         {
+                            counter++;
                             value1 = false;
-                            break;
+                            Console.WriteLine("s");
+                        }
+                        else
+                        {
+                            Console.WriteLine("s+");
                         }
                     }
+                    catch (IndexOutOfRangeException)
+                    {
+                        maxCounter2--;
+                        break;
+                    }
                 }
-                else if (movement == "d")
+
+                coordinateI = newCoordinateI;
+                coordinateJ = newCoordinateJ;
+
+                for (int i = 2; i < maxCounter; i++)
                 {
-                    for (int i = 2; i < maxCounter; i++)
+                    try
                     {
                         coordinateJ++;
                         if (colorPlayerArray[coordinateI, coordinateJ] == "#")
                         {
+                            counter++;
                             value1 = false;
-                            break;
+                            Console.WriteLine("d");
+                        }
+                        else
+                        {
+                            Console.WriteLine("d+");
                         }
                     }
+                    catch (IndexOutOfRangeException)
+                    {
+                        maxCounter2--;
+                        break;
+                    }
                 }
-                Console.WriteLine(coordinateI + " " + coordinateJ);
-                Console.WriteLine(colorPlayerArray[coordinateI, coordinateJ]);
+
+                if (counter != maxCounter2)
+                {
+                    value1 = true;
+                }
             }
-            catch (IndexOutOfRangeException) { }
+
+            if (!value2)
+            {
+                value1 = false;
+            }
+
+            Console.WriteLine("value1 = " + value1);
             return value1;
         }
         //ВЫВОДИМ ЦВЕТНОЙ МАССИВ ИГРОКА
-        static void CheckPlayerArray(string[,] colorPlayerArray, int coordinateI, int coordinateJ, Dictionary <string, int> playerShips)
+        static void CheckPlayerArray(string[,] colorPlayerArray, int coordinateI, int coordinateJ, Dictionary<string, int> playerShips)
         {
             //Console.Clear();
-            Console.WriteLine("    A B C D E F G H J K\n----------------------------");
-         
-            for (int i = 0; i < colorPlayerArray.GetLength(0); i++) {
+            Console.WriteLine("    A B C D E F G H I J\n----------------------------");
+
+            for (int i = 0; i < colorPlayerArray.GetLength(0); i++)
+            {
                 Console.ResetColor();
                 if (i < 9)
                 {
@@ -365,7 +510,12 @@ namespace morskoiBoy
                         Console.BackgroundColor = ConsoleColor.Red;
                         Console.Write("X");
                     }
-    
+                    else if (colorPlayerArray[i, j] == "-")
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.Green;
+                        Console.Write("-");
+                    }
                     else
                     {
                         Console.Write(colorPlayerArray[i, j]);
@@ -380,19 +530,18 @@ namespace morskoiBoy
                     Console.BackgroundColor = ConsoleColor.DarkBlue;
                 }
                 Console.ResetColor();
-                Console.Write("  " + (i + 1));
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.BackgroundColor = ConsoleColor.DarkBlue;
-                Console.WriteLine();
+                Console.WriteLine("  " + (i + 1));
+                //Console.ForegroundColor = ConsoleColor.White;
+                //Console.BackgroundColor = ConsoleColor.DarkBlue;
             }
             Console.ResetColor();
             Console.WriteLine("----------------------------");
         }
 
         static void Main(string[] args)
-        {   
+        {
             //СОЗДАЁМ МАССИВЫ
-            string[,] colorPlayerArray = new string[10, 11];
+            string[,] playerArray = new string[10, 11];
             string[,] botArray = new string[10, 11];
 
             //СОЗДАЁМ СЛОВАРИ
@@ -400,17 +549,17 @@ namespace morskoiBoy
             Dictionary<string, int> botShips = new Dictionary<string, int>();
 
             //ЗАПОЛНЯЕМ МАССИВЫ
-            FillColorPlayerArray(colorPlayerArray);
-            FillBotArray(botArray);
+            FillArray(playerArray);
+            FillArray(botArray);
 
             //ЗАПОЛНЯЕМ СЛОВАРИ
-            FillPlayerShips(playerShips);
-            FillBotShips(botShips);
+            FillShips(playerShips);
+            FillShips(botShips);
 
             //ИНИЦИАЛИЗАЦИЯ ИГРЫ
             Console.WriteLine("Добро пожаловать в игру morskoiBoy");
-            ArrangePlayerArray(colorPlayerArray, playerShips);
-            CheckPlayerArray(colorPlayerArray, 0, 0, playerShips);
+            ArrangePlayerArray(playerArray, playerShips);
+            //CheckPlayerArray(playerArray, 0, 0, playerShips);
             Console.ReadKey();
 
         }

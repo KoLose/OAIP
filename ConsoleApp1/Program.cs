@@ -10,7 +10,12 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-         
+            var a = "true";
+            if (a == "true")
+            {
+                string b = a.GetType().Name;
+                Console.WriteLine(b);
+            }
         }
     }
 }
