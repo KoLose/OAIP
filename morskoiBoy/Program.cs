@@ -336,10 +336,10 @@ namespace morskoiBoy
                 {
                     maxCounter = 2;
                 }
-                    //foreach (var item in playerShips)
-                    //{
-                    //    Console.WriteLine($"{item.Key}: {item.Value}");
-                    //}
+                foreach (var item in playerShips)
+                {
+                    Console.WriteLine($"{item.Key}: {item.Value}");
+                }
             }
             return array;
         }
@@ -554,10 +554,10 @@ namespace morskoiBoy
             int coordinateJ = 0;
             string movement;
             string[,] combinedArray = CombineArrays(playerArray, botArray);
-            bool playerTurn = true;
+            bool playerTurn = true; // true = ход игрока, false = ход бота
             int playerHits = 0;
             int botHits = 0;
-            const int maxHits = 20;
+            const int maxHits = 20; // Максимальное количество попаданий для победы
 
             while (true)
             {
@@ -591,7 +591,10 @@ namespace morskoiBoy
                                     return;
                                 }
                             }
-                            playerTurn = !wasHit;
+                            else
+                            {
+                                playerTurn = false;
+                            }
                             break;
                     }
                 }
@@ -607,7 +610,10 @@ namespace morskoiBoy
                             return;
                         }
                     }
-                    playerTurn = !wasHit;
+                    else
+                    {
+                        playerTurn = true;
+                    }
                 }
             }
         }
@@ -692,7 +698,7 @@ namespace morskoiBoy
         {
             Console.Clear();
 
-            Console.WriteLine("     Ваше поле            Поле противника");
+            Console.WriteLine("        Ваше поле          Поле противника");
             Console.WriteLine("   A B C D E F G H I J   A B C D E F G H I J");
             Console.WriteLine("-------------------------------------------------");
 
