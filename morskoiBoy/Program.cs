@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http.Headers;
@@ -56,7 +58,7 @@ namespace morskoiBoy
             {
                 if (playerArrange)
                 {
-                    CheckPlayerArray(array, coordinateI, coordinateJ, playerShips, mode);
+                    CheckPlayerArray(array, coordinateI, coordinateJ, playerShips, mode, playerArrange);
                     movement = Console.ReadLine();
                 }
                 else
@@ -65,7 +67,7 @@ namespace morskoiBoy
                     {
                         if (counter == 0)
                         {
-                            CheckPlayerArray(array, coordinateI, coordinateJ, playerShips, mode);
+                            CheckPlayerArray(array, coordinateI, coordinateJ, playerShips, mode, playerArrange);
                             Random random = new Random();
                             int nextMovement = random.Next(1, 10);
                             if (nextMovement == 1 || nextMovement == 2)
@@ -91,7 +93,7 @@ namespace morskoiBoy
                         }
                         else
                         {
-                            CheckPlayerArray(array, coordinateI, coordinateJ, playerShips, mode);
+                            CheckPlayerArray(array, coordinateI, coordinateJ, playerShips, mode, playerArrange);
                             Random random = new Random();
                             int nextMovement = random.Next(1, 8);
                             if (nextMovement == 1 || nextMovement == 2)
@@ -334,10 +336,10 @@ namespace morskoiBoy
                 {
                     maxCounter = 2;
                 }
-                foreach (var item in playerShips)
-                {
-                    Console.WriteLine($"{item.Key}: {item.Value}");
-                }
+                    //foreach (var item in playerShips)
+                    //{
+                    //    Console.WriteLine($"{item.Key}: {item.Value}");
+                    //}
             }
             return array;
         }
@@ -544,14 +546,18 @@ namespace morskoiBoy
             }
             return value1;
         }
-        public static void Fight(string[,] playerArray, string[,] botArray,
-                       Dictionary<string, int> playerShips, bool mode)
+
+        //ИНИЦИАЛИЗИРУЕМ БОЙ
+        public static void Fight(string[,] playerArray, string[,] botArray, Dictionary<string, int> playerShips, bool mode)
         {
             int coordinateI = 0;
             int coordinateJ = 0;
             string movement;
             string[,] combinedArray = CombineArrays(playerArray, botArray);
             bool playerTurn = true;
+            int playerHits = 0;
+            int botHits = 0;
+            const int maxHits = 20;
 
             while (true)
             {
@@ -575,22 +581,44 @@ namespace morskoiBoy
                             if (coordinateJ < 9) coordinateJ++;
                             break;
                         case (""):
-                            playerTurn = ProcessShot(combinedArray, coordinateI, coordinateJ);
+                            bool wasHit = ProcessShot(combinedArray, coordinateI, coordinateJ);
+                            if (wasHit)
+                            {
+                                playerHits++;
+                                if (playerHits >= maxHits)
+                                {
+                                    Console.WriteLine("Поздравляем! Вы победили!");
+                                    return;
+                                }
+                            }
+                            playerTurn = !wasHit;
                             break;
                     }
                 }
                 else
                 {
-                    playerTurn = BotTurn(combinedArray);
+                    bool wasHit = BotTurn(combinedArray);
+                    if (wasHit)
+                    {
+                        botHits++;
+                        if (botHits >= maxHits)
+                        {
+                            Console.WriteLine("К сожалению, бот победил.");
+                            return;
+                        }
+                    }
+                    playerTurn = !wasHit;
                 }
             }
         }
 
+        //ПРОВЕРКА ПОПАДАНИЙ ИГРОКА
         static bool ProcessShot(string[,] array, int i, int j)
         {
             if (array[i, j + 11] == "-")
             {
                 array[i, j + 11] = "+";
+                return true;
             }
             else if (array[i, j + 11] == "*" || array[i, j + 11] == "#")
             {
@@ -599,6 +627,8 @@ namespace morskoiBoy
             return false;
         }
 
+
+        //ПРОВЕРКА ПОПАДАНИЙ БОТА
         static bool BotTurn(string[,] array)
         {
             Random rand = new Random();
@@ -614,15 +644,17 @@ namespace morskoiBoy
             if (array[i, j] == "-")
             {
                 array[i, j] = "+";
+                return true;
             }
             else
             {
                 array[i, j] = "=";
             }
-
-            return true;
+            return false;
         }
 
+
+        //КОМБИНИРУЕМ МАССИВЫ ИГРОКА И БОТА В ОДИН МАССИВ
         static string[,] CombineArrays(string[,] playerArray, string[,] botArray)
         {
             int rows = playerArray.GetLength(0);
@@ -654,6 +686,7 @@ namespace morskoiBoy
             return combinedArray;
         }
 
+        //ВЫВОДИМ ОБЩИЙ МАССИВ
         static void CheckCombinedArray(string[,] combinedArray, int cursorI, int cursorJ,
                        Dictionary<string, int> playerShips, bool mode)
         {
@@ -668,7 +701,6 @@ namespace morskoiBoy
                 Console.ResetColor();
                 Console.Write(i < 9 ? $" {i + 1} " : $"{i + 1} ");
 
-                // Левая часть - поле игрока (0-9)
                 for (int j = 0; j < 10; j++)
                 {
                     Console.BackgroundColor = ConsoleColor.DarkBlue;
@@ -728,7 +760,6 @@ namespace morskoiBoy
                 Console.ResetColor();
                 Console.Write("  ");
 
-                // Правая часть - поле бота (11-20)
                 for (int j = 11; j < 21; j++)
                 {
                     Console.BackgroundColor = ConsoleColor.DarkBlue;
@@ -801,59 +832,26 @@ namespace morskoiBoy
         }
 
         //ВЫВОДИМ МАССИВ ИГРОКА ПРИ ЕГО ЗАПОЛНЕНИИ
-        static void CheckPlayerArray(string[,] array, int coordinateI, int coordinateJ, Dictionary<string, int> playerShips, bool mode)
+        static void CheckPlayerArray(string[,] array, int coordinateI, int coordinateJ, Dictionary<string, int> playerShips, bool mode, bool playerArrange)
         {
             Console.Clear();
-            Console.WriteLine("    A B C D E F G H I J\n----------------------------");
-            for (int i = 0; i < array.GetLength(0); i++)
+            if (mode && !playerArrange)
             {
-                Console.ResetColor();
-                if (i < 9)
+                return;
+            }
+            else
+            {
+                Console.WriteLine("    A B C D E F G H I J\n----------------------------");
+                for (int i = 0; i < array.GetLength(0); i++)
                 {
-                    Console.Write(" " + (i + 1) + "  ");
-                }
-                else
-                {
-                    Console.Write((i + 1) + "  ");
-                }
-                if (!mode)
-                {
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkBlue;
-                }
-                Console.BackgroundColor = ConsoleColor.DarkBlue;
-                for (int j = 0; j < array.GetLength(1); j++)
-                {
-                    if (i == coordinateI && j == coordinateJ)
+                    Console.ResetColor();
+                    if (i < 9)
                     {
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.BackgroundColor = ConsoleColor.Red;
-                        Console.Write(" ");
-                    }
-                    else if (array[i, j] == "-")
-                    {
-                        if (!mode)
-                        {
-                            Console.ForegroundColor = ConsoleColor.White;
-                        }
-                        else
-                        {
-                            Console.ForegroundColor = ConsoleColor.Green;
-                        }
-                        Console.BackgroundColor = ConsoleColor.Green;
-                        Console.Write("-");
+                        Console.Write(" " + (i + 1) + "  ");
                     }
                     else
                     {
-                        Console.Write(array[i, j]);
-                    }
-
-                    if (j < array.GetLength(1) - 1)
-                    {
-                        Console.Write(" ");
+                        Console.Write((i + 1) + "  ");
                     }
                     if (!mode)
                     {
@@ -864,12 +862,52 @@ namespace morskoiBoy
                         Console.ForegroundColor = ConsoleColor.DarkBlue;
                     }
                     Console.BackgroundColor = ConsoleColor.DarkBlue;
+                    for (int j = 0; j < array.GetLength(1); j++)
+                    {
+                        if (i == coordinateI && j == coordinateJ)
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.BackgroundColor = ConsoleColor.Red;
+                            Console.Write(" ");
+                        }
+                        else if (array[i, j] == "-")
+                        {
+                            if (!mode)
+                            {
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                            }
+                            Console.BackgroundColor = ConsoleColor.Green;
+                            Console.Write("-");
+                        }
+                        else
+                        {
+                            Console.Write(array[i, j]);
+                        }
+
+                        if (j < array.GetLength(1) - 1)
+                        {
+                            Console.Write(" ");
+                        }
+                        if (!mode)
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkBlue;
+                        }
+                        Console.BackgroundColor = ConsoleColor.DarkBlue;
+                    }
+                    Console.ResetColor();
+                    Console.WriteLine("  " + (i + 1));
                 }
                 Console.ResetColor();
-                Console.WriteLine("  " + (i + 1));
+                Console.WriteLine("----------------------------");
             }
-            Console.ResetColor();
-            Console.WriteLine("----------------------------");
         }
 
         //ВЫБИРАЕМ РЕЖИМ
@@ -913,11 +951,11 @@ namespace morskoiBoy
             //ИНИЦИАЛИЗАЦИЯ ИГРЫ
             Console.WriteLine("Добро пожаловать в игру morskoiBoy");
             bool mode = Mode();
-            ArrangePlayerArray(playerArray, playerShips, false, mode);
+            ArrangePlayerArray(playerArray, playerShips, true, mode);
             ArrangePlayerArray(botArray, botShips, false, mode);
 
-            CheckPlayerArray(botArray, -1, -1, playerShips, mode);
-            string[,] combinedArray = CombineArrays(playerArray, botArray);
+            //CheckPlayerArray(botArray, -1, -1, playerShips, mode);
+            CombineArrays(playerArray, botArray);
 
             Fight(playerArray, botArray, playerShips, mode);
             while (true)
